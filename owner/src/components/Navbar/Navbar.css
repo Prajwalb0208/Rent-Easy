@@ -1,42 +1,18 @@
 .navbar{
-    padding: 20px 0px;
+    padding: 8px 4%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .navbar .logo {
-    width: 150px;
+    width: max(10%,80px);
     cursor: pointer;
 }
-.navbar-menu{
-    display: flex;
-    list-style: none;
-    gap: 20px;
-    color: #49577e;
+.navbar .profile {
+    width: 40px;
     cursor: pointer;
-    font-size: 18px;
-}
-.navbar-right{
-    display: flex;
-    align-items: center;
-    gap: 40px;
-}
-.navbar button{
-    background: transparent;
-    font-size: 16px;
-    color: #49577e;
-    border: 1px solid #49577e;
-    padding: 10px 30px;
-    border-radius: 50px;
-    cursor: pointer;
+    border: 5px solid black; 
+    border-radius: 80%;
 }
 
-.search1{
-    width: 30px;
-}
-
-.navbar button:hover{
-    background-color: #ff343498;
-    color: white;
-}
