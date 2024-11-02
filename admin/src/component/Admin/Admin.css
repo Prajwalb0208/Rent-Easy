@@ -1,0 +1,93 @@
+.admin-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .admin-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .admin-table button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .admin-table button:hover {
+    opacity: 0.85;
+  }
+  
+  button.approve-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  button.reject-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .edit-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+  }
+  
+  .edit-modal h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+  }
+  
+  .edit-modal label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  .edit-modal input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .edit-modal button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-modal button:hover {
+    opacity: 0.9;
+  }
+  
