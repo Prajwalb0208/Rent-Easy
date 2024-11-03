@@ -13,6 +13,7 @@ import user from './user.png'
 import edit from './edit.png'
 import approve from './approve.png'
 import reject from './reject.png'
+import homePlaceholder from './home-placeholder.jpg'
 import del from './delete.png'
 
 export const assets = {
@@ -25,6 +26,7 @@ export const assets = {
     home1,
     home2,
     home3,
+    homePlaceholder,
     logo,
     reject,
     renthome1,

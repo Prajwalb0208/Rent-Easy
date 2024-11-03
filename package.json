@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "cloudinary": "^2.5.1"
+    "cloudinary": "^2.5.1",
+    "firebase": "^11.0.1"
   }
 }

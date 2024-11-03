@@ -1,11 +1,7 @@
-// AreaFilters.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import './AreaFilters.css';
 
-const AreaFilters = () => {
-  const [selectedArea, setSelectedArea] = useState('');
-  const [houseType, setHouseType] = useState('');
-
+const AreaFilters = ({ selectedArea, setSelectedArea, houseType, setHouseType, applyFilters }) => {
   const areas = [
     'Nayandahalli', 'Hosakerehalli', 'Giri Nagar', 'Katriguppe', 'Vidya Peeta Ward', 
     'Jayanagar East', 'JP Nagar', 'Sarakki', 'Shakambari Narar', 'Banashankari Temple Ward',
@@ -14,7 +10,23 @@ const AreaFilters = () => {
     'Anjanapura', 'Vasanthpura'
   ];
 
-  const houseTypes = ['1 BHK', '2 BHK', '3 BHK', 'Room'];
+  const houseTypes = [
+    'Room',
+    '1bhk',
+    '2bhk',
+    '2bhk+duplex',
+    '3bhk',
+    '3bhk+duplex',
+    '4bhk',
+    'Villa',
+    'Office Space'
+  ];
+
+  // Function to reset filters
+  const resetFilters = () => {
+    setSelectedArea(''); // Reset selected area
+    setHouseType(''); // Reset house type
+  };
 
   return (
     <div className="area-filters">
@@ -22,7 +34,7 @@ const AreaFilters = () => {
       <div className="filter-group">
         <label>Area</label>
         <select onChange={(e) => setSelectedArea(e.target.value)} value={selectedArea}>
-          <option value="">Select Area</option>
+          <option value="" disabled>Select Area</option>
           {areas.map((area, index) => (
             <option key={index} value={area}>{area}</option>
           ))}
@@ -31,13 +43,16 @@ const AreaFilters = () => {
       <div className="filter-group">
         <label>House Type</label>
         <select onChange={(e) => setHouseType(e.target.value)} value={houseType}>
-          <option value="">Select Type</option>
+          <option value="" disabled>Select house type</option>
           {houseTypes.map((type, index) => (
             <option key={index} value={type}>{type}</option>
           ))}
         </select>
       </div>
-      <button className="apply-filters-btn">Apply Filters</button>
+      <div className="filter-buttons">
+        <button className="apply-filters-btn" onClick={applyFilters}>Apply Filters</button>
+        <button className="reset-filters-btn" onClick={resetFilters}>Reset Filters</button>
+      </div>
     </div>
   );
 };

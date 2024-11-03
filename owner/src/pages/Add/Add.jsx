@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import './Add.css'; // Import your CSS styles
-import { assets } from '../../assets/assets'; // Adjust the import path if needed
+import './Add.css';
+import { assets } from '../../assets/assets';
+
+// Define the placeholder image URL
+const DEFAULT_IMAGE_URL = 'https://i.ibb.co/c1fsDnX/home-placeholder.jpg';
 
 const Add = () => {
   const [imagePreview, setImagePreview] = useState(null);
@@ -13,68 +16,67 @@ const Add = () => {
     advance: '',
     lease: '',
     ownerMobile: '',
-    imageUrl: '',
+    imageUrl: DEFAULT_IMAGE_URL, 
   });
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file)); // Set image preview
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value }); // Update form data
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form submission default behavior
+    e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const file = e.target.image.files[0]; // Get the uploaded file
-      if (!file) {
-        throw new Error("No file selected for upload");
-      }
+      const file = e.target.image.files[0];
+      let imageUrl = formData.imageUrl;
 
-      const uploadPreset = 'images_to_url';
-      const cloudName = "dxsprjxhl";
+      if (file) {
+        const uploadPreset = 'images_to_url';
+        const cloudName = "dxsprjxhl";
 
-      const formDataImg = new FormData();
-      formDataImg.append('file', file);
-      formDataImg.append('upload_preset', uploadPreset);
+        const formDataImg = new FormData();
+        formDataImg.append('file', file);
+        formDataImg.append('upload_preset', uploadPreset);
 
-      // Upload the image to Cloudinary
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formDataImg,
-      });
+        // Upload the image to Cloudinary
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST',
+          body: formDataImg,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Cloudinary upload error: ${errorData.message}`);
-      }
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Cloudinary upload error: ${errorData.message}`);
+        }
 
-      const data = await response.json(); // Get the response data
-      const imageUrl = data.secure_url; // Get the secure URL of the uploaded image
+        const data = await response.json();
+        imageUrl = data.secure_url; // Get the URL from the response
+      } 
 
-      // Prepare data for submission to your API
+      // Prepare data for submission
       const submissionData = {
         ...formData,
-        imageUrl, // Include the image URL
+        imageUrl,
         rent: formData.typeOfPayment === 'rent' ? formData.rent : undefined,
         advance: formData.typeOfPayment === 'rent' ? formData.advance : undefined,
         lease: formData.typeOfPayment === 'lease' ? formData.lease : undefined,
       };
 
-      // Submit data to your API
       const apiResponse = await fetch(`http://localhost:5000/api/houses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submissionData), // Send the data as JSON
+        body: JSON.stringify(submissionData),
       });
 
       if (!apiResponse.ok) {
@@ -82,7 +84,7 @@ const Add = () => {
         throw new Error(`API submission error: ${errorData.message}`);
       }
 
-      // Reset form data after successful submission
+      // Reset form after successful submission
       setFormData({
         typeOfHouse: '',
         typeOfPayment: 'rent',
@@ -91,14 +93,14 @@ const Add = () => {
         advance: '',
         lease: '',
         ownerMobile: '',
-        imageUrl: '',
+        imageUrl: DEFAULT_IMAGE_URL, // Reset to the placeholder image
       });
-      setImagePreview(null); // Clear the image preview
+      setImagePreview(null);
 
     } catch (error) {
       console.error("Error uploading image or submitting form:", error.message);
     } finally {
-      setIsSubmitting(false); // Reset the submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -108,9 +110,9 @@ const Add = () => {
         <div className="add-img-upload flex-col">
           <p>Upload Image</p>
           <label htmlFor="image">
-            <img src={imagePreview || assets.addimage} alt="Upload" className='add-img' />
+            <img src={imagePreview || assets.addimage || DEFAULT_IMAGE_URL} alt="Upload" className='add-img' />
           </label>
-          <input type="file" id="image" hidden onChange={handleImageUpload} required />
+          <input type="file" id="image" hidden onChange={handleImageUpload} />
         </div>
 
         <div className="add-house-type flex-col">
@@ -154,7 +156,6 @@ const Add = () => {
           />
         </div>
 
-        {/* Conditional rendering based on payment type */}
         {formData.typeOfPayment === 'rent' && (
           <>
             <div className="add-rent flex-col">
