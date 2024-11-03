@@ -21,11 +21,12 @@
 }
 
 .add-img-upload,
-.add-house-no,
-.add-address,
+.add-house-type,
+.add-location,
 .add-rent,
-.add-property-size,
-.add-location {
+.add-advance,
+.add-lease,
+.add-owner-mobile {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -98,12 +99,14 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase; /* Make text uppercase for a professional look */
 }
 
 .add-btn:hover {
     background-color: #0056b3;
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    transform: translateY(-2px); /* Slightly lift the button on hover */
 }
 
 .add-btn:disabled {
@@ -136,7 +139,30 @@
     word-wrap: break-word;
 }
 
-/* Responsive styling for smaller screens */
+.submit {
+    padding: 12px 24px;               /* Ample padding for a comfortable click area */
+    font-size: 1rem;                  /* Font size for readability */
+    font-weight: 600;                 /* Bold text for emphasis */
+    color: #ffffff;                   /* White text color for contrast */
+    background-color: #007bff;       /* Primary blue color */
+    border: none;                     /* Remove default border */
+    border-radius: 6px;              /* Rounded corners for a softer look */
+    cursor: pointer;                  /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; /* Smooth transitions for hover effects */
+    text-transform: uppercase;        /* Uppercase text for a professional touch */
+}
+
+.submit:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+
+.submit:disabled {
+    background-color: #b0c4de;
+    cursor: not-allowed;
+    opacity: 0.6;                    
+}
+
 @media (max-width: 768px) {
     .add {
         width: 90%;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './Add.css';
-import { assets } from '../../assets/assets';
+import './Add.css'; // Import your CSS styles
+import { assets } from '../../assets/assets'; // Adjust the import path if needed
 
 const Add = () => {
   const [imagePreview, setImagePreview] = useState(null);
@@ -19,32 +19,33 @@ const Add = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
+      setImagePreview(URL.createObjectURL(file)); // Set image preview
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value }); // Update form data
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form submission default behavior
     setIsSubmitting(true);
 
     try {
-      const file = e.target.image.files[0];
+      const file = e.target.image.files[0]; // Get the uploaded file
       if (!file) {
         throw new Error("No file selected for upload");
       }
 
-      const uploadPreset = 'images';
-      const cloudName = "dibjzqrp6";
+      const uploadPreset = 'images_to_url';
+      const cloudName = "dxsprjxhl";
 
       const formDataImg = new FormData();
       formDataImg.append('file', file);
       formDataImg.append('upload_preset', uploadPreset);
 
+      // Upload the image to Cloudinary
       const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
         method: 'POST',
         body: formDataImg,
@@ -55,24 +56,25 @@ const Add = () => {
         throw new Error(`Cloudinary upload error: ${errorData.message}`);
       }
 
-      const data = await response.json();
-      const imageUrl = data.secure_url; // Get the image URL
+      const data = await response.json(); // Get the response data
+      const imageUrl = data.secure_url; // Get the secure URL of the uploaded image
 
-      // Update formData with the image URL
+      // Prepare data for submission to your API
       const submissionData = {
         ...formData,
-        imageUrl, // Add the image URL to the submission data
+        imageUrl, // Include the image URL
         rent: formData.typeOfPayment === 'rent' ? formData.rent : undefined,
         advance: formData.typeOfPayment === 'rent' ? formData.advance : undefined,
         lease: formData.typeOfPayment === 'lease' ? formData.lease : undefined,
       };
 
-      const apiResponse = await fetch('/api/houses', {
+      // Submit data to your API
+      const apiResponse = await fetch(`http://localhost:5000/api/houses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submissionData),
+        body: JSON.stringify(submissionData), // Send the data as JSON
       });
 
       if (!apiResponse.ok) {
@@ -80,7 +82,7 @@ const Add = () => {
         throw new Error(`API submission error: ${errorData.message}`);
       }
 
-      // Reset form data
+      // Reset form data after successful submission
       setFormData({
         typeOfHouse: '',
         typeOfPayment: 'rent',
@@ -89,14 +91,14 @@ const Add = () => {
         advance: '',
         lease: '',
         ownerMobile: '',
-        imageUrl: '', // Reset the image URL
+        imageUrl: '',
       });
-      setImagePreview(null);
+      setImagePreview(null); // Clear the image preview
 
     } catch (error) {
       console.error("Error uploading image or submitting form:", error.message);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Reset the submitting state
     }
   };
 
@@ -113,14 +115,23 @@ const Add = () => {
 
         <div className="add-house-type flex-col">
           <p>Type of House</p>
-          <input
-            type="text"
+          <select
             name='typeOfHouse'
-            placeholder='E.g., 2BHK, 3BHK'
             onChange={handleInputChange}
             value={formData.typeOfHouse}
             required
-          />
+          >
+            <option value="" disabled>Select house type</option>
+            <option value="Room">Room</option>
+            <option value="1bhk">1BHK</option>
+            <option value="2bhk">2BHK</option>
+            <option value="2bhk+duplex">2BHK + Duplex</option>
+            <option value="3bhk">3BHK</option>
+            <option value="3bhk+duplex">3BHK + Duplex</option>
+            <option value="4bhk">4BHK</option>
+            <option value="Villa">Villa</option>
+            <option value="Office space">Office Space</option>
+          </select>
         </div>
 
         <div className="add-payment-type flex-col">
@@ -197,7 +208,7 @@ const Add = () => {
           />
         </div>
 
-        <button type="submit" disabled={isSubmitting}>
+        <button className='submit' type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </form>

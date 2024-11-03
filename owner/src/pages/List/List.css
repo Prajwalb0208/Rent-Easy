@@ -11,6 +11,11 @@
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 15px;
+  transition: box-shadow 0.3s ease;
+}
+
+.house-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .house-image {
@@ -23,41 +28,51 @@
 
 .house-details {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .house-info-top,
 .house-info-bottom {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  margin-bottom: 10px; /* Space between top and bottom info */
 }
 
-.house-info-top p {
-  flex: 1 60%;
+.house-info-top h3 {
   margin: 0;
+  font-size: 1.5rem;
 }
 
 .house-info-bottom p {
-  flex: 1 1 45%;
   margin: 0;
+  line-height: 1.6; /* Improved readability */
 }
 
 .house-actions {
   margin-top: 10px;
+  display: flex;
+  gap: 10px; /* Space between action buttons */
 }
 
 .house-actions button {
-  margin-right: 10px;
-  padding: 5px 10px;
+  padding: 8px 12px;
   border: none;
   background-color: #007bff;
   color: white;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.house-actions button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
 }
 
 .house-actions button:last-child {
   background-color: #dc3545;
+}
+
+.house-actions button:last-child:hover {
+  background-color: #c82333; /* Darker shade for delete button on hover */
 }
 
 .edit-form {

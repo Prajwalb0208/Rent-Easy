@@ -10,15 +10,23 @@ import renthome2 from './renthome2.png'
 import renthome3 from './renthome3.png'
 import search from './search.png'
 import user from './user.png'
+import edit from './edit.png'
+import approve from './approve.png'
+import reject from './reject.png'
+import del from './delete.png'
 
 export const assets = {
+    approve,
     apartment,
     buyhome,
     contracthome,
+    del,
+    edit,
     home1,
     home2,
     home3,
     logo,
+    reject,
     renthome1,
     renthome2,
     renthome3,
