@@ -12,11 +12,12 @@ export const getAllHouses = async (req, res) => {
 
 // Create a new house listing
 export const createHouse = async (req, res) => {
-  const { typeOfHouse, typeOfPayment, location, rent, advance, lease, ownerMobile, imageUrl } = req.body;
+  const { typeOfHouse, typeOfPayment, location, rent, advance, lease, ownerMobile, imageUrl, area } = req.body;
   const newHouse = new House({
     typeOfHouse,
     typeOfPayment,
     location,
+    area,  // Add area to the new house object
     ownerMobile,
     imageUrl,
     status: 'Pending',
@@ -38,6 +39,9 @@ export const updateHouse = async (req, res) => {
 
   try {
     const updatedHouse = await House.findByIdAndUpdate(id, updatedData, { new: true });
+    if (!updatedHouse) {
+      return res.status(404).json({ message: "House not found" });
+    }
     res.json(updatedHouse);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -50,6 +54,9 @@ export const approveHouse = async (req, res) => {
 
   try {
     const approvedHouse = await House.findByIdAndUpdate(id, { status: 'Approved' }, { new: true });
+    if (!approvedHouse) {
+      return res.status(404).json({ message: "House not found" });
+    }
     res.json(approvedHouse);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -62,6 +69,9 @@ export const rejectHouse = async (req, res) => {
 
   try {
     const rejectedHouse = await House.findByIdAndUpdate(id, { status: 'Rejected' }, { new: true });
+    if (!rejectedHouse) {
+      return res.status(404).json({ message: "House not found" });
+    }
     res.json(rejectedHouse);
   } catch (error) {
     res.status(400).json({ message: error.message });

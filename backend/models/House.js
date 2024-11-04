@@ -11,6 +11,17 @@ const houseSchema = new mongoose.Schema(
     ownerMobile: { type: String, required: true },
     imageUrl: { type: String, required: true },
     status: { type: String, default: 'Pending' },
+    area: {
+      type: String,
+      required: true,
+      enum: [
+        'Nayandahalli', 'Hosakerehalli', 'Giri Nagar', 'Katriguppe', 'Vidya Peeta Ward',
+        'Jayanagar East', 'JP Nagar', 'Sarakki', 'Shakambari Narar', 'Banashankari Temple Ward',
+        'Kumara Swamy Layout', 'Padmanabha Nagar', 'Chikkala Sandra', 'Uttarahalli',
+        'Yelchenahalli', 'Jaraganahalli', 'Puttenahalli', 'Gottigere', 'Konankunte',
+        'Anjanapura', 'Vasanthpura'
+      ]
+    }
   },
   { timestamps: true }
 );
