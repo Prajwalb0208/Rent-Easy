@@ -17,7 +17,7 @@ export const createHouse = async (req, res) => {
     typeOfHouse,
     typeOfPayment,
     location,
-    area,  // Add area to the new house object
+    area,
     ownerMobile,
     imageUrl,
     status: 'Pending',
@@ -92,3 +92,4 @@ export const deleteHouse = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+

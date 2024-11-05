@@ -33,6 +33,10 @@ const Admin = () => {
     navigate('add');
   };
 
+  const navBacktoHome = () =>{
+    navigate('');
+  }
+
   const approveHouse = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/houses/${id}/approve`, {
@@ -93,13 +97,18 @@ const Admin = () => {
 
   const handleEdit = (house) => {
     setEditHouseData(house);
-    setCurrentImageIndex(0); // Reset image index when editing
+    setCurrentImageIndex(0);
   };
 
   const saveEdit = async () => {
+    if (!editHouseData || !editHouseData._id) {
+      toast.error('Invalid house data');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:5000/api/houses/${editHouseData._id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -120,6 +129,7 @@ const Admin = () => {
       }
     } catch (error) {
       console.error('Error saving changes:', error);
+      console.log('Editing house with ID:', editHouseData._id);
       toast.error('Failed to save changes!');
     }
   };
@@ -150,7 +160,7 @@ const Admin = () => {
     setEditHouseData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Carousel functions
+
   const nextImage = () => {
     if (editHouseData.images && editHouseData.images.length) {
       setCurrentImageIndex((prevIndex) =>
@@ -217,7 +227,7 @@ const Admin = () => {
             sortedHouses.map((house) => (
               <tr key={house._id}>
                 <td>
-                  <img src={house.imageUrl} alt="House" className="house-image" />
+                  <img src={house.imageUrl[0]} alt="House" className="house-image" />
                 </td>
                 <td>{house.area}</td>
                 <td>{house.location}</td>
@@ -288,39 +298,106 @@ const Admin = () => {
 
       {editHouseData && (
         <div className="carousel-container">
-          <h3>Edit House Images</h3>
-          <div className="carousel">
-            <button onClick={prevImage} className="carousel-button">Prev</button>
-            {editHouseData.images && editHouseData.images.length > 0 && (
-              <img
-                src={editHouseData.images[currentImageIndex]}
-                alt="House"
-                className="carousel-image"
-              />
-            )}
-            <button onClick={nextImage} className="carousel-button">Next</button>
-          </div>
-          <button onClick={() => deleteImage(currentImageIndex)} className="delete-image-button">
-            Delete Image
-          </button>
-        </div>
-      )}
-
-      {editHouseData && (
-        <div className="edit-form">
           <h3>Edit House Details</h3>
-          <label>
-            Area:
-            <input
-              type="text"
-              name="area"
-              value={editHouseData.area}
-              onChange={handleInputChange}
-            />
-          </label>
-          {/* Add more input fields as necessary for editing house details */}
-          <button onClick={saveEdit}>Save Changes</button>
-          <button onClick={() => setEditHouseData(null)}>Cancel</button>
+          <form className="edit-form">
+            <label>
+              Type of House:
+              <input
+                type="text"
+                name="typeOfHouse"
+                value={editHouseData.typeOfHouse}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+
+            <label>
+              Type of Payment:
+              <select
+                name="typeOfPayment"
+                value={editHouseData.typeOfPayment}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="rent">Rent</option>
+                <option value="lease">Lease</option>
+              </select>
+            </label>
+
+            {editHouseData.typeOfPayment === 'rent' && (
+              <>
+                <label>
+                  Rent:
+                  <input
+                    type="number"
+                    name="rent"
+                    value={editHouseData.rent || ''}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
+                <label>
+                  Advance:
+                  <input
+                    type="number"
+                    name="advance"
+                    value={editHouseData.advance || ''}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
+              </>
+            )}
+
+            {editHouseData.typeOfPayment === 'lease' && (
+              <label>
+                Lease:
+                <input
+                  type="number"
+                  name="lease"
+                  value={editHouseData.lease || ''}
+                  onChange={handleInputChange}
+                  required
+                />
+              </label>
+            )}
+
+            <label>
+              Owner Mobile:
+              <input
+                type="text"
+                name="ownerMobile"
+                value={editHouseData.ownerMobile}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+
+            <label>
+              Area:
+              <select
+                name="area"
+                value={editHouseData.area}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled>Select Area</option>
+                {[
+                  'Nayandahalli', 'Hosakerehalli', 'Giri Nagar', 'Katriguppe', 'Vidya Peeta Ward',
+                  'Jayanagar East', 'JP Nagar', 'Sarakki', 'Shakambari Narar', 'Banashankari Temple Ward',
+                  'Kumara Swamy Layout', 'Padmanabha Nagar', 'Chikkala Sandra', 'Uttarahalli',
+                  'Yelchenahalli', 'Jaraganahalli', 'Puttenahalli', 'Gottigere', 'Konankunte',
+                  'Anjanapura', 'Vasanthpura'
+                ].map((area) => (
+                  <option key={area} value={area}>{area}</option>
+                ))}
+              </select>
+            </label>
+            
+
+            <button type="button" onClick={saveEdit} className="save-button">Save Changes</button>
+            <button type="button" onClick={() => setEditHouseData(null)} className="cancel-button">Cancel</button>
+          </form>
         </div>
       )}
     </div>
