@@ -5,7 +5,7 @@ import { assets } from '../../assets/assets';
 const DEFAULT_IMAGE_URL = 'https://i.ibb.co/c1fsDnX/home-placeholder.jpg';
 
 const Add = () => {
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     typeOfHouse: '',
@@ -16,19 +16,37 @@ const Add = () => {
     advance: '',
     lease: '',
     ownerMobile: '',
-    imageUrl: DEFAULT_IMAGE_URL,
+    imageUrl: [], // For storing multiple image URLs
   });
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
+    const files = Array.from(e.target.files);
+    const newImagePreviews = files.map(file => URL.createObjectURL(file));
+
+    // Update state to include new images
+    setImagePreviews(prev => [...prev, ...newImagePreviews]);
+    
+    // Update formData.imageUrl to include the new file objects
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: [...prev.imageUrl, ...files] // Store the actual file objects for upload
+    }));
+  };
+
+  const handleImageDelete = (index) => {
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    const newFormDataImages = formData.imageUrl.filter((_, i) => i !== index);
+    
+    setImagePreviews(newPreviews);
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: newFormDataImages // Update the imageUrl in formData as well
+    }));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -36,35 +54,28 @@ const Add = () => {
     setIsSubmitting(true);
 
     try {
-      const file = e.target.image.files[0];
-      let imageUrl = formData.imageUrl;
-
-      if (file) {
-        const uploadPreset = 'images_to_url';
-        const cloudName = "dxsprjxhl";
-
+      const uploadPromises = formData.imageUrl.map(file => {
         const formDataImg = new FormData();
         formDataImg.append('file', file);
-        formDataImg.append('upload_preset', uploadPreset);
+        formDataImg.append('upload_preset', 'images_to_url');
 
         // Upload the image to Cloudinary
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        return fetch(`https://api.cloudinary.com/v1_1/dxsprjxhl/image/upload`, {
           method: 'POST',
           body: formDataImg,
-        });
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to upload image');
+          }
+          return response.json();
+        }).then(data => data.secure_url);
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Cloudinary upload error: ${errorData.message}`);
-        }
-
-        const data = await response.json();
-        imageUrl = data.secure_url;
-      }
+      const imageUrls = await Promise.all(uploadPromises); // Wait for all uploads to complete
 
       const submissionData = {
         ...formData,
-        imageUrl,
+        imageUrl: imageUrls, // Store the array of uploaded image URLs
         rent: formData.typeOfPayment === 'rent' ? formData.rent : undefined,
         advance: formData.typeOfPayment === 'rent' ? formData.advance : undefined,
         lease: formData.typeOfPayment === 'lease' ? formData.lease : undefined,
@@ -83,20 +94,22 @@ const Add = () => {
         throw new Error(`API submission error: ${errorData.message}`);
       }
 
+      // Reset the form data and image previews after submission
       setFormData({
         typeOfHouse: '',
         typeOfPayment: 'rent',
+        area: '',
         location: '',
         rent: '',
         advance: '',
         lease: '',
         ownerMobile: '',
-        imageUrl: DEFAULT_IMAGE_URL, // Reset to the placeholder image
+        imageUrl: [],
       });
-      setImagePreview(null);
+      setImagePreviews([]);
 
     } catch (error) {
-      console.error("Error uploading image or submitting form:", error.message);
+      console.error("Error uploading images or submitting form:", error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -106,11 +119,20 @@ const Add = () => {
     <div className='add'>
       <form className='flex-col' onSubmit={handleSubmit}>
         <div className="add-img-upload flex-col">
-          <p>Upload Image</p>
-          <label htmlFor="image">
-            <img src={imagePreview || assets.addimage || DEFAULT_IMAGE_URL} alt="Upload" className='add-img' />
+          <p>Upload Images</p>
+          <label htmlFor="image" className='add-img-label'>
+            <img src={assets.addimage || DEFAULT_IMAGE_URL} alt="Upload" className='add-img' />
           </label>
-          <input type="file" id="image" hidden onChange={handleImageUpload} />
+          <input type="file" id="image" hidden onChange={handleImageUpload} multiple />
+        </div>
+
+        <div className="image-preview-container">
+          {imagePreviews.map((preview, index) => (
+            <div key={index} className="image-preview">
+              <img src={preview} alt={`Preview ${index}`} className='image-preview-img' />
+              <span className="delete-image" onClick={() => handleImageDelete(index)}>✖</span>
+            </div>
+          ))}
         </div>
 
         <div className="add-house-type flex-col">
@@ -174,7 +196,6 @@ const Add = () => {
           </select>
         </div>
 
-
         <div className="add-location flex-col">
           <p>Location</p>
           <input
@@ -229,19 +250,19 @@ const Add = () => {
         )}
 
         <div className="add-owner-mobile flex-col">
-          <p>Owner Mobile</p>
+          <p>Owner Mobile Number</p>
           <input
             type="text"
             name='ownerMobile'
-            placeholder='Enter owner mobile number'
+            placeholder='Enter owner mobile'
             onChange={handleInputChange}
             value={formData.ownerMobile}
             required
           />
         </div>
 
-        <button className='submit' type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Submit'}
+        <button type="submit" className='submit-button' disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Add House'}
         </button>
       </form>
     </div>

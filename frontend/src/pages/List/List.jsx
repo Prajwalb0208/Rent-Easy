@@ -13,6 +13,7 @@ const List = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/houses');
         setHouses(response.data);
+        console.log("Houses array:", response.data);
       } catch (error) {
         console.error("Error fetching houses:", error);
       } finally {
@@ -31,7 +32,7 @@ const List = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { imageUrl, ...houseDataToUpdate } = currentHouse; 
+      const { imageUrl, ...houseDataToUpdate } = currentHouse; // Exclude imageUrl
       const response = await axios.put(`http://localhost:5000/api/houses/${currentHouse._id}`, houseDataToUpdate);
       setHouses((prevHouses) => 
         prevHouses.map((house) =>
@@ -96,27 +97,27 @@ const List = () => {
               onChange={handleInputChange}
               required
             >
-                <option value="" disabled>Select area</option>
-                <option value="Anjanapura">Anjanapura</option>
-                <option value="Banashankari Temple Ward">Banashankari Temple Ward</option>
-                <option value="Chikkalasandra">Chikkalasandra</option>
-                <option value="Giri Nagar">Giri Nagar</option>
-                <option value="Hosakerehalli">Hosakerehalli</option>
-                <option value="JP Nagar">JP Nagar</option>
-                <option value="Katriguppe">Katriguppe</option>
-                <option value="Kumara Swamy Layout">Kumara Swamy Layout</option>
-                <option value="Padmanabha Nagar">Padmanabha Nagar</option>
-                <option value="Puttenahalli">Puttenahalli</option>
-                <option value="Sarakki">Sarakki</option>
-                <option value="Shakambari Nagar">Shakambari Nagar</option>
-                <option value="Uttarahalli">Uttarahalli</option>
-                <option value="Vidya Peeta Ward">Vidya Peeta Ward</option>
-                <option value="Yelchenahalli">Yelchenahalli</option>
-                <option value="Jaraganahalli">Jaraganahalli</option>
-                <option value="Gottigere">Gottigere</option>
-                <option value="Vasanthpura">Vasanthpura</option>
-              </select>
-              </label>
+              <option value="" disabled>Select area</option>
+              <option value="Anjanapura">Anjanapura</option>
+              <option value="Banashankari Temple Ward">Banashankari Temple Ward</option>
+              <option value="Chikkalasandra">Chikkalasandra</option>
+              <option value="Giri Nagar">Giri Nagar</option>
+              <option value="Hosakerehalli">Hosakerehalli</option>
+              <option value="JP Nagar">JP Nagar</option>
+              <option value="Katriguppe">Katriguppe</option>
+              <option value="Kumara Swamy Layout">Kumara Swamy Layout</option>
+              <option value="Padmanabha Nagar">Padmanabha Nagar</option>
+              <option value="Puttenahalli">Puttenahalli</option>
+              <option value="Sarakki">Sarakki</option>
+              <option value="Shakambari Nagar">Shakambari Nagar</option>
+              <option value="Uttarahalli">Uttarahalli</option>
+              <option value="Vidya Peeta Ward">Vidya Peeta Ward</option>
+              <option value="Yelchenahalli">Yelchenahalli</option>
+              <option value="Jaraganahalli">Jaraganahalli</option>
+              <option value="Gottigere">Gottigere</option>
+              <option value="Vasanthpura">Vasanthpura</option>
+            </select>
+          </label>
           {currentHouse.typeOfPayment === 'lease' ? (
             <label>
               Lease Amount:
@@ -162,6 +163,7 @@ const List = () => {
               required
             />
           </label>
+          {/* Removed Image URL from the edit form */}
           <button type="submit">Save</button>
           <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
         </form>
@@ -172,7 +174,7 @@ const List = () => {
               {houses.map((house) => (
                 <li key={house._id} className="house-item">
                   <img 
-                    src={house.imageUrl} 
+                    src={house.imageUrl[0]} // Display the first image from the array
                     alt={house.typeOfHouse} 
                     className="house-image" 
                   />

@@ -26,6 +26,14 @@
   margin-right: 20px;
 }
 
+.house-image-edit {
+  width: 120px; /* or any size you prefer */
+  height: 120px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px; /* Space between images */
+}
+
 .house-details {
   flex-grow: 1;
   display: flex;

@@ -100,13 +100,13 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-    text-transform: uppercase; /* Make text uppercase for a professional look */
+    text-transform: uppercase;
 }
 
 .add-btn:hover {
     background-color: #0056b3;
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
-    transform: translateY(-2px); /* Slightly lift the button on hover */
+    transform: translateY(-2px);
 }
 
 .add-btn:disabled {
@@ -114,19 +114,24 @@
     cursor: not-allowed;
 }
 
-.preview-images {
+.image-preview-container {
     display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.preview-img {
-    width: 60px;
-    height: 60px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  
+  .image-preview {
+    position: relative;
+    margin: 0.5rem;
+  }
+  
+  .image-preview-img {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
     object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #d1d1d1;
-}
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
 
 .uploaded-image-urls {
     margin-top: 15px;
@@ -140,22 +145,23 @@
 }
 
 .submit {
-    padding: 12px 24px;               /* Ample padding for a comfortable click area */
-    font-size: 1rem;                  /* Font size for readability */
-    font-weight: 600;                 /* Bold text for emphasis */
-    color: #ffffff;                   /* White text color for contrast */
-    background-color: #007bff;       /* Primary blue color */
-    border: none;                     /* Remove default border */
-    border-radius: 6px;              /* Rounded corners for a softer look */
-    cursor: pointer;                  /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; /* Smooth transitions for hover effects */
-    text-transform: uppercase;        /* Uppercase text for a professional touch */
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
 }
 
 .submit:hover {
     background-color: #0056b3;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
+}
 
 .submit:disabled {
     background-color: #b0c4de;
@@ -178,5 +184,10 @@
 
     .add-btn {
         font-size: 0.95em;
+    }
+
+    .preview-img {
+        width: 50px; /* Adjust preview image size for smaller screens */
+        height: 50px;
     }
 }

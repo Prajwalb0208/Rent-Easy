@@ -9,7 +9,7 @@ const houseSchema = new mongoose.Schema(
     advance: { type: Number, required: function() { return this.typeOfPayment === 'rent'; } },
     lease: { type: Number, required: function() { return this.typeOfPayment === 'lease'; } },
     ownerMobile: { type: String, required: true },
-    imageUrl: { type: String, required: true },
+    imageUrl: { type: [String], required: true },
     status: { type: String, default: 'Pending' },
     area: {
       type: String,
